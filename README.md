@@ -2,13 +2,14 @@
 目的是利用k8s的helm和operator的能力提供中间件，在此上构建应用系统。  
 
 概念:
+```
 Component:基础组件：各种中间件，常用服务  
 Design:产品设计
 Instance:产品实例
 Cluster:底层k8s环境
+```
 
-
-产品表示一个系统  
+逻辑关系： 
 ```
 Product:
   ProductName: product
