@@ -31,6 +31,7 @@ Product:
           Input: asdf
           PreRole: 
 ```
+[component定义](./components/README.md)  
 
 命名空间
 ```
