@@ -12,7 +12,9 @@ func TestManger(t *testing.T) {
 
 	list := []string{"mysql"}
 	assert.Equal(t, list, mgr.Components())
-	err, output := mgr.Excute("mysql", "CREATE", "kubetest", nil, "testns", "testid")
+	env := make(map[string]string)
+	env["A"] = "a"
+	err, output := mgr.Excute("mysql", "CREATE", "kubetest", env, "testns", "testid")
 	assert.Nil(t, err)
-	assert.Equal(t, []string{"testns=testid"}, output)
+	assert.Equal(t, []string{"testns,testid,a"}, output)
 }

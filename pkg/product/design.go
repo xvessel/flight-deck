@@ -2,6 +2,7 @@ package product
 
 import (
 	"encoding/json"
+	"reflect"
 
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
@@ -28,15 +29,11 @@ type DesignModel struct {
 	ComponentRefersStr string
 }
 
-//TODO
 func EqualComponentRefer(a, b ComponentRefer) bool {
-}
-
-//TODO
-func CanUpdateDesign(a, b Design) bool {
-	aComps := make(map[string]ComponentRefer)
-	bComps := make(map[string]ComponentRefer)
-
+	if a.Role != b.Role || a.ComponentName != b.ComponentName {
+		return false
+	}
+	return reflect.DeepEqual(a.Input, b.Input)
 }
 
 func Design2Model(d *Design) DesignModel {

@@ -1,4 +1,4 @@
-package envrionment
+package cluster
 
 import (
 	"testing"
@@ -6,12 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEnv(t *testing.T) {
+func TestCluster(t *testing.T) {
 	m := make(map[string]string)
 	config := "testconfig"
 	env := "prod"
 	m[env] = config
-	mgr := NewEnvrionmentMgr(m)
+	mgr := NewClusterMgr(m)
 
 	ret, err := mgr.GetKubeConfig(env)
 
