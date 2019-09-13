@@ -20,9 +20,11 @@ PRE
 - 退出码表示是否正确执行  
 - stdout为用户访问的变量，同OUTPUT格式
 - stderr, 错误具体信息
+- KUBECONFIG,k8s的配置会以环境变量的方式提供
+
 ```
-CREATE
-READY
+CREATE namespace id
+READY namespace id
 UPDATE_CHECK
 UPDATE
 DELETE 
