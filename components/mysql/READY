@@ -1,3 +1,0 @@
-
-echo "HOST=${NAME}"
-echo "PORT=3306"

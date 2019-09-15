@@ -1,0 +1,3 @@
+
+echo HOST=${2}.com
+echo PORT=8080

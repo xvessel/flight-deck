@@ -25,3 +25,10 @@ UPDATE namespace id
 DELETE namespace id
 ```
 
+### 测试
+test.sh是测试脚本的工具  
+目录example是个例子  
+使用示例：  
+```
+test.sh example namespace name kubeconfigfile
+```

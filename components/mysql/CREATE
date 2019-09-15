@@ -1,5 +1,0 @@
-
-NAME=$1
-helm install --name ${NAME} \
-  --set mysqlUser=${USER},mysqlPassword=${PASSWORD} \
-    stable/mysql
