@@ -1,0 +1,9 @@
+description: hello
+input:
+    - name: CPU
+      default_value: 1
+      can_update: true
+      description: "cpu核数"
+output:
+    - name: HOST
+      description: "访问host"

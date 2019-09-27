@@ -27,7 +27,7 @@ func listComponentHandler(w http.ResponseWriter, r *http.Request) {
 
 func detailComponentHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	c, err := componentMgr.Component(vars["componentName"])
+	c, err := componentMgr.Spec(vars["componentName"])
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

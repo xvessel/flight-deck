@@ -9,20 +9,47 @@
 package component
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
-	"io"
-	"os"
+	"io/ioutil"
 	"os/exec"
 	"strings"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
+type SpecInput struct {
+	Name         string
+	DefaultValue string
+	CanUpdate    bool
+	Description  string
+}
+
+type SpecOutput struct {
+	Name        string
+	Description string
+}
+
+type Spec struct {
+	Description string
+	Inputs      []SpecInput
+	Outputs     []SpecOutput
+}
+
 type Component struct {
-	Name       string
-	Dir        string
-	InputSpec  map[string][2]string
-	OutputSpec map[string][2]string
+	Dir  string
+	Name string
+	spec Spec
+}
+
+func NewComponent(dir, name string) (Component, error) {
+	c := Component{Dir: dir, Name: name}
+	b, err := ioutil.ReadFile(dir + "/" + name)
+	if err != nil {
+		return c, err
+	}
+	err = yaml.Unmarshal(b, &c.spec)
+	return c, err
 }
 
 func (c *Component) Run(cmdstr string, env []string, namespace string, id string) (error, map[string]string) {
@@ -49,6 +76,7 @@ func (c *Component) Run(cmdstr string, env []string, namespace string, id string
 	return err, ret
 }
 
+/*
 func (c *Component) Input() (ret map[string][2]string, err error) {
 	return extractFile(c.Dir + "/" + c.Name + "/INPUT")
 }
@@ -90,3 +118,4 @@ func extractFile(fileName string) (ret map[string][2]string, err error) {
 	}
 	return ret, nil
 }
+*/

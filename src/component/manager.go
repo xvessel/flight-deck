@@ -15,10 +15,8 @@ import (
 
 type Manager interface {
 	Components() []string
-	Component(name string) (Component, error)
-	Input(component string) (ret map[string][2]string, err error)
-	Output(component string) (ret map[string][2]string, err error)
-	Excute(component string, cmd string, kubeConfig string, input map[string]string, namespace string, id string) (err error, output map[string]string)
+	Spec(compName string) (Spec, error)
+	Excute(compName string, cmd string, kubeConfig string, input map[string]string, namespace string, id string) (err error, output map[string]string)
 }
 
 var CMD_CREATE string = "CREATE"
@@ -45,14 +43,14 @@ func NewComponentMgr(dir string) *ComponentMgr {
 	return ret
 }
 
-func (m *ComponentMgr) Component(name string) (Component, error) {
-	input, err := m.Input(name)
-	if err != nil {
-		return Component{}, err
-	}
-	output, _ := m.Output(name)
-	return Component{Name: name, InputSpec: input, OutputSpec: output}, nil
-}
+//func (m *ComponentMgr) Component(name string) (Component, error) {
+//	input, err := m.Input(name)
+//	if err != nil {
+//		return Component{}, err
+//	}
+//	output, _ := m.Output(name)
+//	return Component{Name: name, InputSpec: input, OutputSpec: output}, nil
+//}
 
 func (m *ComponentMgr) Components() []string {
 	ret := make([]string, 0)
@@ -62,19 +60,11 @@ func (m *ComponentMgr) Components() []string {
 	return ret
 }
 
-func (m *ComponentMgr) Input(component string) (ret map[string][2]string, err error) {
+func (m *ComponentMgr) Spec(component string) (Spec, error) {
 	if v, ok := m.compMap[component]; ok {
-		return v.Input()
+		return v.spec, nil
 	} else {
-		return nil, fmt.Errorf("commponet %s not exsit", component)
-	}
-}
-
-func (m *ComponentMgr) Output(component string) (ret map[string][2]string, err error) {
-	if v, ok := m.compMap[component]; ok {
-		return v.Output()
-	} else {
-		return nil, fmt.Errorf("commponet %s not exsit", component)
+		return Spec{}, fmt.Errorf("component %v not exist", component)
 	}
 }
 

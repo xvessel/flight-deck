@@ -47,62 +47,32 @@ func (mr *MockManagerMockRecorder) Components() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Components", reflect.TypeOf((*MockManager)(nil).Components))
 }
 
-// Component mocks base method
-func (m *MockManager) Component(name string) (component.Component, error) {
+// Spec mocks base method
+func (m *MockManager) Spec(compName string) (component.Spec, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Component", name)
-	ret0, _ := ret[0].(component.Component)
+	ret := m.ctrl.Call(m, "Spec", compName)
+	ret0, _ := ret[0].(component.Spec)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Component indicates an expected call of Component
-func (mr *MockManagerMockRecorder) Component(name interface{}) *gomock.Call {
+// Spec indicates an expected call of Spec
+func (mr *MockManagerMockRecorder) Spec(compName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Component", reflect.TypeOf((*MockManager)(nil).Component), name)
-}
-
-// Input mocks base method
-func (m *MockManager) Input(component string) (map[string][2]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Input", component)
-	ret0, _ := ret[0].(map[string][2]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Input indicates an expected call of Input
-func (mr *MockManagerMockRecorder) Input(component interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Input", reflect.TypeOf((*MockManager)(nil).Input), component)
-}
-
-// Output mocks base method
-func (m *MockManager) Output(component string) (map[string][2]string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Output", component)
-	ret0, _ := ret[0].(map[string][2]string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Output indicates an expected call of Output
-func (mr *MockManagerMockRecorder) Output(component interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Output", reflect.TypeOf((*MockManager)(nil).Output), component)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Spec", reflect.TypeOf((*MockManager)(nil).Spec), compName)
 }
 
 // Excute mocks base method
-func (m *MockManager) Excute(component, cmd, kubeConfig string, input map[string]string, namespace, id string) (error, map[string]string) {
+func (m *MockManager) Excute(compName, cmd, kubeConfig string, input map[string]string, namespace, id string) (error, map[string]string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Excute", component, cmd, kubeConfig, input, namespace, id)
+	ret := m.ctrl.Call(m, "Excute", compName, cmd, kubeConfig, input, namespace, id)
 	ret0, _ := ret[0].(error)
 	ret1, _ := ret[1].(map[string]string)
 	return ret0, ret1
 }
 
 // Excute indicates an expected call of Excute
-func (mr *MockManagerMockRecorder) Excute(component, cmd, kubeConfig, input, namespace, id interface{}) *gomock.Call {
+func (mr *MockManagerMockRecorder) Excute(compName, cmd, kubeConfig, input, namespace, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Excute", reflect.TypeOf((*MockManager)(nil).Excute), component, cmd, kubeConfig, input, namespace, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Excute", reflect.TypeOf((*MockManager)(nil).Excute), compName, cmd, kubeConfig, input, namespace, id)
 }

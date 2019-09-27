@@ -1,0 +1,9 @@
+description: hello
+input:
+    - name: KEY1
+      default_value: VALUE1
+      can_update: true
+      description: test
+output:
+    - name: A
+      description: test

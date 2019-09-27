@@ -1,0 +1,2 @@
+HOST=sample   #访问域名
+PORT=3306     #访问端口
