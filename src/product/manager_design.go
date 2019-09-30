@@ -15,7 +15,18 @@ import (
 func (m *Manager) NewDesign(d *Design) error {
 	_, err := m.GetProduct(d.ProductName)
 	if err != nil {
-		return err
+		return fmt.Errorf("GetProduct %v %v", *d, err)
+	}
+	for _, j := range d.ComponentRefers {
+		spec, err := m.componentMgr.Spec(j.ComponentName)
+		if err != nil {
+			return fmt.Errorf("Component %v not found ", j.ComponentName)
+		}
+		for _, in := range spec.Inputs {
+			if _, ok := j.Input[in.Name]; !ok {
+				return fmt.Errorf("input %v not exist", in.Name)
+			}
+		}
 	}
 	//ComponentRefer validate
 	sort := make([]ComponentRefer, 0)
@@ -55,10 +66,15 @@ func (m *Manager) GetDesign(productName string, revision string) (Design, error)
 	return DesignModel2Desgin(model), err
 }
 
-func (m *Manager) GetDesigns(productName string) ([]DesignModel, error) {
+func (m *Manager) GetDesigns(productName string) ([]Design, error) {
 	model := make([]DesignModel, 0)
 	err := m.db.Where("product_name = ? ", productName).Find(&model).Error
-	return model, err
+
+	ret := make([]Design, 0)
+	for _, j := range model {
+		ret = append(ret, DesignModel2Desgin(j))
+	}
+	return ret, err
 }
 
 func (m *Manager) NewProduct(prodName string) error {

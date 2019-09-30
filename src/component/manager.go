@@ -14,55 +14,44 @@ import (
 )
 
 type Manager interface {
-	Components() []string
+	Components() []Spec
 	Spec(compName string) (Spec, error)
 	Excute(compName string, cmd string, kubeConfig string, input map[string]string, namespace string, id string) (err error, output map[string]string)
 }
 
-var CMD_CREATE string = "CREATE"
-var CMD_READY string = "READY"
-var CMD_UPDATE_CHECK string = "UPDATE_CHECK"
-var CMD_UPDATE string = "UPDATE"
-var CMD_DELETE string = "DELETE"
-
 type ComponentMgr struct {
 	Dir     string
-	compMap map[string]Component
+	compMap map[string]ComponentIf
 }
 
-func NewComponentMgr(dir string) *ComponentMgr {
+func NewComponentMgr(dir string) (*ComponentMgr, error) {
 	ret := &ComponentMgr{Dir: dir,
-		compMap: make(map[string]Component)}
+		compMap: make(map[string]ComponentIf)}
 
 	childs, _ := ioutil.ReadDir(dir)
-	for _, c := range childs {
-		if c.IsDir() {
-			ret.compMap[c.Name()] = Component{Dir: dir + "/" + c.Name(), Name: c.Name()}
+	for _, ch := range childs {
+		if ch.IsDir() {
+			comp, err := NewComponent(dir, ch.Name())
+			if err != nil {
+				return ret, err
+			}
+			ret.compMap[ch.Name()] = &comp
 		}
 	}
-	return ret
+	return ret, nil
 }
 
-//func (m *ComponentMgr) Component(name string) (Component, error) {
-//	input, err := m.Input(name)
-//	if err != nil {
-//		return Component{}, err
-//	}
-//	output, _ := m.Output(name)
-//	return Component{Name: name, InputSpec: input, OutputSpec: output}, nil
-//}
-
-func (m *ComponentMgr) Components() []string {
-	ret := make([]string, 0)
-	for i, _ := range m.compMap {
-		ret = append(ret, i)
+func (m *ComponentMgr) Components() []Spec {
+	ret := make([]Spec, 0)
+	for _, i := range m.compMap {
+		ret = append(ret, i.GetSpec())
 	}
 	return ret
 }
 
 func (m *ComponentMgr) Spec(component string) (Spec, error) {
 	if v, ok := m.compMap[component]; ok {
-		return v.spec, nil
+		return v.GetSpec(), nil
 	} else {
 		return Spec{}, fmt.Errorf("component %v not exist", component)
 	}

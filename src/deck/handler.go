@@ -10,6 +10,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -78,6 +79,7 @@ func newDesignHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	err = productMgr.NewDesign(&design)
+	fmt.Println(err)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
@@ -112,6 +114,16 @@ func getDesignHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func listInstanceHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	insts, err := productMgr.GetProductInsts(vars["prodName"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	b, _ := json.Marshal(insts)
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
 }
 
 func getInstanceHandler(w http.ResponseWriter, r *http.Request) {

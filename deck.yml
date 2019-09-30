@@ -1,4 +1,4 @@
-Listen: 8080
+Listen: ":8080"
 ComponentDir: "components"
 KubeConfig:
-    "test": "/root/.kube/config"
+    "test-cluster": "/root/.kube/config"

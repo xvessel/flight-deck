@@ -27,14 +27,15 @@ var componentMgr component.Manager
 var productMgr *product.Manager
 
 type Config struct {
-	Listen       int
-	ComponentDir string
-	KubeConfig   map[string]string
+	Listen       string            `yaml:"Listen"`
+	ComponentDir string            `yaml:"ComponentDir"`
+	KubeConfig   map[string]string `yaml:"KubeConfig"`
 }
 
 func main() {
 	configFile := flag.String("conf", "", "config file ")
 	flag.Parse()
+
 	b, err := ioutil.ReadFile(*configFile)
 	if err != nil {
 		return
@@ -44,18 +45,22 @@ func main() {
 	if err != nil {
 		return
 	}
+	fmt.Println(string(b), conf)
 
 	clusterMgr = cluster.NewClusterMgr(conf.KubeConfig)
-	componentMgr = component.NewComponentMgr(conf.ComponentDir)
+	componentMgr, err = component.NewComponentMgr(conf.ComponentDir)
+	if err != nil {
+		fmt.Println("componentMgr err", err)
+	}
 	productMgr = product.NewManager(componentMgr, clusterMgr, "sqlite")
 
 	r := mux.NewRouter()
-	//components
-	r.HandleFunc("/components", listComponentHandler).Methods(http.MethodGet)
-	r.HandleFunc("/components/{componentName}", detailComponentHandler).Methods(http.MethodGet)
 	//product
 	r.HandleFunc("/products", newProdHandler).Methods(http.MethodPost)
 	r.HandleFunc("/products", listProdHandler).Methods(http.MethodGet)
+	//components
+	r.HandleFunc("/components", listComponentHandler).Methods(http.MethodGet)
+	r.HandleFunc("/components/{componentName}", detailComponentHandler).Methods(http.MethodGet)
 	//design
 	r.HandleFunc("/designs", newDesignHandler).Methods(http.MethodPost)
 	r.HandleFunc("/products/{prodName}/designs", listDesignHandler).Methods(http.MethodGet)
@@ -67,5 +72,5 @@ func main() {
 	r.HandleFunc("/products/{prodName}/instances/{instanceName}", getInstanceHandler).Methods(http.MethodGet)
 	r.HandleFunc("/products/{prodName}/instances", updateInstanceHandler).Methods(http.MethodPut)
 
-	fmt.Println(http.ListenAndServe(":8000", r))
+	fmt.Println(http.ListenAndServe(conf.Listen, r))
 }

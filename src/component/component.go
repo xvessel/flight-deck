@@ -19,43 +19,49 @@ import (
 )
 
 type SpecInput struct {
-	Name         string
-	DefaultValue string
-	CanUpdate    bool
-	Description  string
+	Name         string `yaml:"name"`
+	DefaultValue string `yaml:"default_value"`
+	CanUpdate    bool   `yaml:"can_update"`
+	Description  string `yaml:"description"`
 }
 
 type SpecOutput struct {
-	Name        string
-	Description string
+	Name        string `yaml:"name"`
+	Description string `yaml:"description"`
 }
 
 type Spec struct {
-	Description string
-	Inputs      []SpecInput
-	Outputs     []SpecOutput
+	Name        string       `yaml:"name"`
+	Description string       `yaml:"description"`
+	Inputs      []SpecInput  `yaml:"inputs"`
+	Outputs     []SpecOutput `yaml:"outputs"`
 }
 
 type Component struct {
-	Dir  string
-	Name string
-	spec Spec
+	dir  string
+	Name string `yaml:"name"`
+	Spec Spec   `yaml:"spec"`
 }
 
 func NewComponent(dir, name string) (Component, error) {
-	c := Component{Dir: dir, Name: name}
-	b, err := ioutil.ReadFile(dir + "/" + name)
+	c := Component{dir: dir, Name: name}
+	b, err := ioutil.ReadFile(dir + "/" + name + "/SPEC.yaml")
 	if err != nil {
 		return c, err
 	}
-	err = yaml.Unmarshal(b, &c.spec)
+	err = yaml.Unmarshal(b, &c.Spec)
+	c.Spec.Name = name
 	return c, err
+}
+
+func (c *Component) GetSpec() Spec {
+	return c.Spec
 }
 
 func (c *Component) Run(cmdstr string, env []string, namespace string, id string) (error, map[string]string) {
 	cmd := exec.Command("bash", "-c", cmdstr+" "+namespace+" "+id)
 	cmd.Env = env
-	cmd.Dir = c.Dir
+	cmd.Dir = c.dir + "/" + c.Name
 
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer

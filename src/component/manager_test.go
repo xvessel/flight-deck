@@ -16,10 +16,11 @@ import (
 
 func TestManger(t *testing.T) {
 
-	mgr := NewComponentMgr("test")
-
-	list := []string{"mysql"}
-	assert.Equal(t, list, mgr.Components())
+	mgr, err := NewComponentMgr("./test")
+	assert.Nil(t, err)
+	comps := mgr.Components()
+	assert.Equal(t, 1, len(comps))
+	assert.Equal(t, "mysql", comps[0].Name)
 	env := make(map[string]string)
 	env["A"] = "a"
 	err, output := mgr.Excute("mysql", "CREATE", "kubetest", env, "testns", "testid")

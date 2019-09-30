@@ -48,18 +48,17 @@ func (m *Manager) coordinate() {
 		for {
 			prodInstModels := make([]ProductInstModel, 0)
 			m.db.Where("status='init' or status='update'").Find(&prodInstModels)
-			for _, model := range prodInstModels {
-				design, _ := m.GetDesign(model.ProductName, model.DesignRevision)
+			for _, instmodel := range prodInstModels {
+				design, _ := m.GetDesign(instmodel.ProductName, instmodel.DesignRevision)
 				for _, r := range design.ComponentRefers {
 					fmt.Println("coordinate ", r)
-					err1 := m.CreateComponentObj(model, r)
-					err2 := m.UpdateComponentObj(model, r, design.Revision)
+					err1 := m.CreateComponentObj(instmodel, r)
+					err2 := m.UpdateComponentObj(instmodel, r, design.Revision)
 					if err1 != nil || err2 != nil {
 						fmt.Println("coordinate err", err1, err2)
-						//TODO
 					}
 					for {
-						if err := m.ComponentObjReady(model, r.Role, r.ComponentName); err != nil {
+						if err := m.ComponentObjReady(instmodel, r.Role, r.ComponentName); err != nil {
 							fmt.Println("not ready", r.ComponentName, r.Role)
 							time.Sleep(time.Second)
 						} else {
@@ -67,7 +66,7 @@ func (m *Manager) coordinate() {
 						}
 					}
 				}
-				m.db.Model(&ProductInstModel{}).Where("inst_id=?", model.InstId).Update("status", StatusReady)
+				m.db.Model(&ProductInstModel{}).Where("inst_id=?", instmodel.InstId).Update("status", StatusReady)
 			}
 			m.db.Where("status ='delete'").Find(&prodInstModels)
 			//TODO delete

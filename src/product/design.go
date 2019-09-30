@@ -26,16 +26,16 @@ type ProductModel struct {
 }
 
 type Design struct {
-	ProductName     string
-	Revision        string
-	ComponentRefers []ComponentRefer
+	ProductName     string           `json:"ProductName"`
+	Revision        string           `json:"Revision"`
+	ComponentRefers []ComponentRefer `json:"ComponentRefers"`
 }
 
 type ComponentRefer struct {
-	Role          string
-	ComponentName string
-	Input         map[string]string
-	PreRole       []string
+	Role          string            `json:"Role"`
+	ComponentName string            `json:"ComponentName"`
+	Input         map[string]string `json:"Input"`
+	PreRole       []string          `json:"PreRole"`
 }
 
 type DesignModel struct {
