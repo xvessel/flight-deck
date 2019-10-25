@@ -124,7 +124,24 @@ func ComponentInit(cmd *cobra.Command, args []string) {
 }
 
 func ComponentGet(cmd *cobra.Command, args []string) {
-	fmt.Println("TODO")
+	name := args[0]
+	req, err := http.NewRequest(http.MethodGet, DeckAddr + "/components/" + name, nil)
+	ExitIfError(err)
+	resp, err := http.DefaultClient.Do(req)
+	ExitIfError(err)
+	if resp.StatusCode != http.StatusOK{
+		ExitIfError(fmt.Errorf("http responde code is not 200. %s", resp.Status))
+	}
+	defer resp.Body.Close()
+	data, err := ioutil.ReadAll(resp.Body)
+	ExitIfError(err)
+	c := &component.Spec{}
+	err = json.Unmarshal(data, c)
+	ExitIfError(err)
+	pretty, err := json.MarshalIndent(c, "    ", "    ")
+	ExitIfError(err)
+	fmt.Println(string(pretty))
+
 }
 
 func ComponentList(cmd *cobra.Command, args []string) {
@@ -144,9 +161,6 @@ func ComponentList(cmd *cobra.Command, args []string) {
 	for _, c := range cs{
 		fmt.Println(c.Name, c.Description)
 	}
-	pretty, err := json.MarshalIndent(cs, "    ", "    ")
-	ExitIfError(err)
-	fmt.Println(string(pretty))
 }
 
 // TODO: add package and post component CMD
