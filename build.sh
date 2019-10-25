@@ -1,4 +1,8 @@
+#!/usr/bin/env bash
+cd `dirname $0`
 
-export GOPATH=${PWD}:$GOPATH
+export GOPATH=${PWD}
 export GO111MODULE=off
-go build deck
+
+go build -o ./bin/deck  deck
+go build -o ./bin/dkctl client
