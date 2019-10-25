@@ -33,11 +33,12 @@ type Config struct {
 }
 
 func main() {
-	configFile := flag.String("conf", "", "config file ")
+	configFile := flag.String("conf", "deck.yml", "config file ")
 	flag.Parse()
 
 	b, err := ioutil.ReadFile(*configFile)
 	if err != nil {
+		fmt.Println("read config error: ", err)
 		return
 	}
 	var conf Config
