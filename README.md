@@ -39,10 +39,24 @@ Product:
           Output: 
 ```
 
+#### 系统UI 
+
+- 架构设计 
+![](./html/设计-2.png)
+
+- 设计列表
+![](./html/设计-1.png)
+
+- 部署实例
+![](./html/实例-2.png)
+
+- 实例列表
+![](./html/实例-1.png)
+
 ### 中间件开发人员如何接入： 
 [component定义](./components/README.md)  
 
-### kubernetes使用  
+### kubernetes引用  
 ```
 productName---envrionmentName---instanceName---role
               |-k8s cluster-|               
